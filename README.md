@@ -16,7 +16,7 @@ Make sure you have the following environment variables (.env) set up:
 These environment variables are essential to authorize your bot to interact with Telegram API and OpenAI GPT.
 
 ## Get Started
-(Provide instructions on how to clone this repo, install dependencies and run the bot)
+```npm run dev``
 
 ## Contributing
 If you wish to contribute to this project, kindly fork this repository, make your features or bug fixes, and issue a Pull Request.
