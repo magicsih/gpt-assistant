@@ -21,10 +21,6 @@ class Telegram {
     logger.info("Telegram bot started.");
   }
 
-  async sendMessage(message: string) {
-    await this.bot.telegram.sendMessage(Env.TELEGRAM_CHAT_ID, message);
-  }
-
   public get botInstance() {
     return this.bot;
   }
