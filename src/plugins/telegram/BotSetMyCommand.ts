@@ -9,7 +9,8 @@ class BotSetMyCommand implements TelegramPluginBase {
       { command: "help", description: "Show help" },
       { command: "gpt_model", description: "Show current gpt model" },
       { command: "gpt_system_role", description: "Manage gpt system role" },
-      { command: "config", description: "Manage session config" },
+      { command: "rss_feed", description: "Show rss feed"},
+      // { command: "config", description: "Manage session config" },
     ]);
   };
 }

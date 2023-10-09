@@ -8,9 +8,9 @@ const telegramPlugins = fs
     return `${file}`;
   });
 
-telegramPlugins.forEach(async (file: string) => {
-  if (file.endsWith(".ts")) {
-    file = file.replace(".ts", ".js");
+for (const fileName of telegramPlugins) {
+  if (fileName !== "BotOnTextDefault.ts" && fileName.endsWith(".ts")) {
+    let file = fileName.replace(".ts", ".js");
     const module = await import(`./telegram/${file}`);
     if ("register" in module.default) {
       module.default.register(telegram.botInstance);
@@ -19,4 +19,8 @@ telegramPlugins.forEach(async (file: string) => {
       logger.info(`Plugin ${file} not registered.`);
     }
   }
-});
+}
+
+const module = await import(`./telegram/BotOnTextDefault.js`);
+module.default.register(telegram.botInstance);
+logger.info(`Plugin BotOnTextDefault registered.`);
