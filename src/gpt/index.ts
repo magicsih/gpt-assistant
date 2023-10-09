@@ -1,15 +1,16 @@
-import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
+// import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
+import OpenAI from 'openai';
 import Env from "../env/index.js";
 import LocalDB, { ChatData } from "../localdb/index.js";
 import { logger } from "../logger/index.js";
+import { ChatCompletionMessageParam } from 'openai/resources/chat/index.mjs';
 
 class GPT {
-  private openai: OpenAIApi;
-  constructor() {
-    const config = new Configuration({
-      apiKey: Env.OPENAI_API_KEY,
+  private openai: OpenAI;
+  constructor() {    
+    this.openai = new OpenAI({
+      apiKey: Env.OPENAI_API_KEY
     });
-    this.openai = new OpenAIApi(config);
   }
 
   async completeChat(session: string, message: string) {
@@ -20,20 +21,17 @@ class GPT {
     const messages = await LocalDB.fetchLastMessages(session, 3);
     logger.debug(`Model: ${gptModel} Messages: ${JSON.stringify(messages)}`);
 
-    const completion = await this.openai.createChatCompletion({
+    const completion = await this.openai.chat.completions.create({
       model: gptModel,
       messages: [
         { role: "system", content: systemRole },
-        ...messages.map(
-          (message: ChatData) =>
-            ({
-              role: message.role,
-              content: message.content,
-            } as ChatCompletionRequestMessage)
-        ),
-      ],
+        ...messages.map((message: ChatData) => ({
+          role: message.role,
+          content: message.content,
+        })),
+      ] as Array<ChatCompletionMessageParam>,
     });
-    const response = completion.data.choices[0].message;
+    const response = completion.choices[0].message;
     const responseMessage: string = response?.content ? response.content : "";
 
     await LocalDB.postMessage(session, {
@@ -52,7 +50,7 @@ class GPT {
     userMessage: string
   ) {
     const { gptModel } = await LocalDB.getSessionConfig(session);
-    const completion = await this.openai.createChatCompletion({
+    const completion = await this.openai.chat.completions.create({
       model: gptModel,
       messages: [
         { role: "system", content: systemMessage },
@@ -60,7 +58,7 @@ class GPT {
       ],
     });
 
-    const response = completion.data.choices[0].message;
+    const response = completion.choices[0].message;
     const responseMessage: string = response?.content ? response.content : "";
     logger.debug(`Response: ${responseMessage}`);
     return responseMessage;
