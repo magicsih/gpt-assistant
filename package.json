@@ -5,8 +5,9 @@
   "type": "module",
   "exports": "./main.js",
   "scripts": {
-    "dev": "npx ts-node --esm ./src/main.ts",
-    "build": "npx tsc && node dist/main.js",
+    "dev": "node --import './loader.mjs' ./src/main.ts",
+    "build": "npx tsc",
+    "build:run": "npx tsc && node dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
